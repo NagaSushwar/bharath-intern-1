@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { useEffect, useState } from "react";
 import { useRef } from "react";
 
@@ -24,6 +25,7 @@ import { BsPinFill as PinActiveIcon } from "react-icons/bs";
 
 import { QRCode } from "react-qrcode-logo";
 import MeetGridCard from "../components/MeetGridCard";
+import VideoRecorderComponent from "../components/VideoRecorderComponent";
 
 // framer motion
 import { motion, AnimatePresence } from "framer-motion";
@@ -217,12 +219,17 @@ const Room = () => {
     peer.signal(incomingSignal);
     return peer;
   };
+  const [recording, setRecording] = useState(false);
+
+  const toggleRecording = () => {
+    setRecording(!recording);
+  };
 
   return (
     <>
       {user ? (
         <AnimatePresence>
-          {loading ? (
+          {loading ? (  
             <div className="bg-lightGray">
               <Loading />
             </div>
@@ -359,6 +366,20 @@ const Room = () => {
                           >
                             {videoActive ? <VideoOnIcon /> : <VideoOffIcon />}
                           </button>
+                          {/* Recording button */}
+            <div>
+              <button
+                className={`${
+                  recording ? "bg-red" : "bg-slate-800/70 backdrop-blur"
+                } border-2 p-2 cursor-pointer rounded-xl text-white text-xl`}
+                onClick={toggleRecording}
+              >
+                {recording ? "Stop Recording" : "Start Recording"}
+              </button>
+            </div>
+                        </div>
+                        <div>
+                          <></>
                         </div>
                         {/* <div>
                           <button
@@ -613,6 +634,7 @@ const Room = () => {
             </div>
           )}
         </AnimatePresence>
+        
       ) : (
         <div className="h-full bg-darkBlue2 flex items-center justify-center">
           <button
@@ -626,6 +648,7 @@ const Room = () => {
           </button>
         </div>
       )}
+      
     </>
   );
 };

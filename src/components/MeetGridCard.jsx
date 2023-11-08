@@ -1,24 +1,27 @@
 import { motion } from "framer-motion";
-import React, { useEffect } from "react";
-import { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 // icons
-import { IoMic as MicOnIcon } from "react-icons/io5";
-import { IoMicOff as MicOffIcon } from "react-icons/io5";
 import { BsPin as PinIcon } from "react-icons/bs";
 import { BsPinFill as PinActiveIcon } from "react-icons/bs";
-import { useRef } from "react";
 
 const MeetGridCard = ({ user, micActive, peer }) => {
   const [pin, setPin] = useState(false);
+  const [recording, setRecording] = useState(false); // New state to control video recording
   const videoRef = useRef();
   const [videoActive, setVideoActive] = useState(true);
+
   useEffect(() => {
     peer.on("stream", (stream) => {
       setVideoActive(stream.getTracks().find((track) => track.kind === "video").enabled);
       videoRef.current.srcObject = stream;
     });
   }, []);
+
+  const startStopRecording = () => {
+    setRecording((prevRecording) => !prevRecording);
+  };
+
   return (
     <motion.div
       layout
@@ -60,23 +63,9 @@ const MeetGridCard = ({ user, micActive, peer }) => {
           />
         </div>
       )}
-      {/* <div className="absolute bottom-4 right-4">
-        <button
-          className={`${
-            micActive
-              ? "bg-blue border-transparent"
-              : "bg-slate-800/70 backdrop-blur border-gray"
-          } md:border-2 border-[1px] aspect-square opacity-80 md:p-2.5 p-1.5 cursor-default md:rounded-xl rounded-lg text-white md:text-xl text-lg`}
-          // onClick={() => {
-          //   setMicOn(!micActive);
-          //   joinSound.play();
-          // }}
-        >
-          {micActive ? <MicOnIcon /> : <MicOffIcon />}
-        </button>
-      </div> */}
+
       <div className="absolute bottom-4 left-4">
-        <div className="bg-slate-800/70 backdrop-blur border-gray border-2  py-1 px-3 cursor-pointer rounded-md text-white text-xs">
+        <div className="bg-slate-800/70 backdrop-blur border-gray border-2 py-1 px-3 cursor-pointer rounded-md text-white text-xs">
           {user?.name || "Anonymous"}
         </div>
       </div>
